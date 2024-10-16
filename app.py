@@ -1,18 +1,29 @@
 from flask import Flask
+from flask_mongoengine import MongoEngine
+
 from flask_restful import Resource, Api
 
 app = Flask(__name__)
 api = Api(app)
+db = MongoEngine(app)
+
+app.config['MONGODB_SETTINGS'] = {
+    'db': 'users',
+    'host': 'mongodb',
+    'port': 27017,  # default do mongo com docker compose
+    'user': 'admin',
+    'password': 'admin'
+}
 
 
 class Users(Resource):
     def get(self):
-        return{"message": "user 1"}
+        return {"message": "user 1"}
 
 
 class User(Resource):
     def get(self):
-        return{"message": "test"}
+        return {"message": "test"}
 
 
 api.add_resource(Users, "/users")
@@ -20,7 +31,7 @@ api.add_resource(User, "/user")
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=3000)
+    app.run(debug=True, port=3000, host="0.0.0.0")
 
 
 # @app.route("/")
