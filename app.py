@@ -20,7 +20,8 @@ def create_user():
 def get_users():
     users = []
     for user in users_collection.find():
-        user['_id'] = str(user['_id']) # Convert ObjectId to string for JSON serialization
+        # Convert ObjectId to string for JSON serialization
+        user['_id'] = str(user['_id'])
         users.append(user)
     return jsonify(users), 200
 
