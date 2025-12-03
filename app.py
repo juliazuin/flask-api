@@ -1,39 +1,29 @@
-from flask import Flask
-from flask_mongoengine import MongoEngine
-
-from flask_restful import Resource, Api
+from flask import Flask, jsonify, request
+from flask_pymongo import PyMongo
 
 app = Flask(__name__)
-api = Api(app)
-db = MongoEngine(app)
 
-app.config['MONGODB_SETTINGS'] = {
-    'db': 'users',
-    'host': 'mongodb',
-    'port': 27017,  # default do mongo com docker compose
-    'user': 'admin',
-    'password': 'admin'
-}
+app.config["MONGO_URI"] = "mongodb://admin:admin@mongodb:27017/usuarios?authSource=admin"
+mongo = PyMongo(app)
+
+users_collection = mongo.db.users
 
 
-class Users(Resource):
-    def get(self):
-        return {"message": "user 1"}
+@app.route('/users', methods=['POST'])
+def create_user():
+    user_data = request.json
+    users_collection.insert_one(user_data)
+    return jsonify({"message": "User created successfully"}), 201
 
 
-class User(Resource):
-    def get(self):
-        return {"message": "test"}
-
-
-api.add_resource(Users, "/users")
-api.add_resource(User, "/user")
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = []
+    for user in users_collection.find():
+        user['_id'] = str(user['_id']) # Convert ObjectId to string for JSON serialization
+        users.append(user)
+    return jsonify(users), 200
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=3000, host="0.0.0.0")
-
-
-# @app.route("/")
-# def hello_world():
-#     return "<p>Hello, World!</p>"
+    app.run(debug=True, host="0.0.0.0")
