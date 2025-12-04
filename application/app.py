@@ -1,10 +1,7 @@
-from flask import Flask, jsonify, request
-from flask_pymongo import PyMongo
+from flask import jsonify, request
+from .db import mongo
+import app
 
-app = Flask(__name__)
-
-app.config["MONGO_URI"] = "mongodb://admin:admin@mongodb:27017/usuarios?authSource=admin"
-mongo = PyMongo(app)
 
 users_collection = mongo.db.users
 
@@ -24,7 +21,3 @@ def get_users():
         user['_id'] = str(user['_id'])
         users.append(user)
     return jsonify(users), 200
-
-
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
