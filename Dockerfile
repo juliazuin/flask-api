@@ -1,12 +1,15 @@
 FROM python:3.14.0-alpine3.22
 
-EXPOSE 3000
+EXPOSE 5000
 
 WORKDIR /app
 COPY requirements.txt .
 
 RUN pip install -r requirements.txt
 
-COPY app.py .
+COPY wsgi.py .
+COPY config.py .
 
-CMD ["python", "app.py"]
+COPY application/ ./application/
+
+CMD ["python", "wsgi.py"]

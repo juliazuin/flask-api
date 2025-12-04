@@ -4,5 +4,5 @@ test:
 	@flake8 . --exclude=venv
 
 compose:
-	@docker-compose up --buiild
+	@docker-compose up --build
 	
