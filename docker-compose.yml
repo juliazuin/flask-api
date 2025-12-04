@@ -16,6 +16,10 @@ services:
       - 5000:5000
     environment:
       - FLASK_ENV=development
+      - MONGO_USER=admin
+      - MONGO_PASSWORD=admin
+      - MONGO_HOST=mongodb
+      - MONGO_DB=usuarios
     restart: always
     depends_on:
       - mongodb  
