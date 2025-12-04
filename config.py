@@ -14,3 +14,7 @@ class ProdConfig:
     MONGODB_SETTINGS = {
         "MONGO_URI": "mongodb://admin:admin@mongodb/usuarios?authSource=admin"
         }
+
+
+class TestConfig:
+    MONGO_URI = "mongodb://localhost/usuarios"  # mongomock vai capturar isso
