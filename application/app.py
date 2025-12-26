@@ -19,3 +19,13 @@ def get_users():
         user['_id'] = str(user['_id'])
         users.append(user)
     return jsonify(users), 200
+
+
+def healthcheck():
+    response = mongo.db.healthcheck.find_one({"status": "healthy"})
+
+    if response:
+        return "Healthy", 200
+    else:
+        mongo.db.healthcheck.insert_one({"status": "healthy"})
+        return "Healthy", 200
