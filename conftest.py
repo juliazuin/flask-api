@@ -11,12 +11,15 @@ def app_with_mongomock():
     mongomock_client = mongomock.MongoClient()
 
     # Fazer patch de PyMongo para usar mongomock
-    with patch('pymongo.synchronous.mongo_client.MongoClient', return_value=mongomock_client):
+    with patch(
+        "pymongo.synchronous.mongo_client.MongoClient", return_value=mongomock_client
+    ):
         # Também fazer patch do flask_pymongo
-        with patch('flask_pymongo.PyMongo.__init__', lambda x: None):
-            with patch('flask_pymongo.PyMongo.init_app', lambda x, y: None):
-                app = create_app('config.TestConfig')
+        with patch("flask_pymongo.PyMongo.__init__", lambda x: None):
+            with patch("flask_pymongo.PyMongo.init_app", lambda x, y: None):
+                app = create_app("config.TestConfig")
                 # Substituir mongo.db pelo mongomock
                 from application.db import mongo
-                mongo.db = mongomock_client['usuarios']
+
+                mongo.db = mongomock_client["usuarios"]
                 yield app
