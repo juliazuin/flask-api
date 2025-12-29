@@ -89,3 +89,8 @@ def test_create_user(self, app):
 ```
 
 Cada teste tem seu próprio banco de dados em memória isolado, garantindo que os testes não interferam uns com os outros.
+
+Run Bandit:
+```bash 
+bandit -r . -x './venv','./tests/'
+```
