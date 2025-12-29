@@ -6,7 +6,6 @@ from .app import healthcheck, home, create_user, get_users
 def create_app(config_filename):
     app = Flask(__name__)
     app.config.from_object(config_filename)
-    # app.config["MONGO_URI"] = "mongodb://admin:admin@mongodb/usuarios?authSource=admin"
 
     init_db(app)
 
