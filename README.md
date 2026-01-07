@@ -16,16 +16,6 @@
 make compose
 ```
 
-Ou manualmente:
-```bash
-docker-compose up -d
-```
-
-#### Parar os containers
-```bash
-docker-compose down
-```
-
 ### Usando Kubernetes com Kind (Desenvolvimento em Cluster)
 
 #### Setup completo (cria cluster + instala dependências + app)
@@ -62,6 +52,9 @@ make teardown-dev
 ```bash
 make test
 ```
+
+Pré-requisito:
+Iniciar a venv
 
 Executa:
 - Bandit (análise de segurança)
