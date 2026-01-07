@@ -17,7 +17,7 @@ class ProdConfig:
     mongo_pass = os.getenv("MONGODB_PASSWORD")
     mongo_host = os.getenv("MONGODB_HOST")
     mongo_db = "users"
-    
+
     MONGODB_SETTINGS = {
         "MONGO_URI": "mongodb+srv://admin:<db_password>@cluster0.er82gea.mongodb.net/users?appName=Cluster0"
     }
