@@ -19,6 +19,15 @@ spec:
       - image: restapi-flask:latest
         name: restapi-flask
         imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000  # The port your application listens on inside the container
+          name: http
+        env:
+        - name: FLASK_ENV
+          value: development
+        envFrom:
+        - secretRef:
+            name: mongodb-credentials
         resources: {}
         livenessProbe:
           httpGet: 
