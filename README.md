@@ -5,16 +5,69 @@
 ### Pré-requisitos
 - Docker
 - Docker Compose
+- Kind (para desenvolvimento com Kubernetes local)
+- Helm (para gerenciar charts Kubernetes)
+- Kubectl (para interagir com clusters Kubernetes)
 
-### Levante os containers
+### Usando Docker Compose (Desenvolvimento Local)
+
+#### Levantar os containers
+```bash
+make compose
+```
+
+Ou manualmente:
 ```bash
 docker-compose up -d
 ```
 
-### Parar os containers
+#### Parar os containers
 ```bash
 docker-compose down
 ```
+
+### Usando Kubernetes com Kind (Desenvolvimento em Cluster)
+
+#### Setup completo (cria cluster + instala dependências + app)
+```bash
+make dev
+```
+
+Isso vai executar:
+1. `make setup-dev` - Cria cluster KIND, instala NGINX Ingress Controller e MongoDB via Helm
+2. `make deploy-dev` - Build imagem Docker, carrega no cluster e aplica manifestos da app.
+
+#### Apenas setup inicial (sem deploy)
+```bash
+make setup-dev
+```
+
+Cria o cluster KIND com:
+- NGINX Ingress Controller para roteamento
+- MongoDB via Helm chart
+
+#### Deploy da aplicação no cluster
+```bash
+make deploy-dev
+```
+
+Constrói e deploya a aplicação nos manifestos Kubernetes
+
+#### Remover cluster
+```bash
+make teardown-dev
+```
+
+#### Executar testes
+```bash
+make test
+```
+
+Executa:
+- Bandit (análise de segurança)
+- Black (formatação de código)
+- Flake8 (linting)
+- Pytest (testes unitários)
 
 ## API Endpoints
 
@@ -94,3 +147,16 @@ Run Bandit:
 ```bash 
 bandit -r . -x './venv','./tests/'
 ```
+
+### Usando Makefile
+
+Para conveniência, todos os comandos podem ser executados via Makefile:
+
+| Comando | Descrição |
+|---------|-----------|
+| `make compose` | Sobe os containers com Docker Compose |
+| `make setup-dev` | Configura cluster KIND com dependências |
+| `make deploy-dev` | Faz build e deploy da app no KIND |
+| `make dev` | Executa setup-dev + deploy-dev (completo) |
+| `make teardown-dev` | Remove o cluster KIND |
+| `make test` | Executa testes, linting e análise de segurança |
