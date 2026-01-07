@@ -1,4 +1,4 @@
-APP = restapi
+APP = restapi-flask
 
 test:
 	@bandit -r . -x './venv','./tests/'
@@ -11,7 +11,6 @@ compose:
 	
 setup-dev:
 	@kind create cluster --config=kubernetes/config/config.yaml
-	@kind load docker-image restapi-flask:latest
 	@kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.8.1/deploy/static/provider/kind/deploy.yaml
 	@kubectl wait --namespace ingress-nginx \
 		--for=condition=ready pod \
@@ -22,3 +21,13 @@ setup-dev:
 	@kubectl wait --for=condition=ready pod -l app.kubernetes.io/instance=mongodb --timeout=270s
 teardown-dev:
 	@kind delete clusters kind
+
+deploy-dev:
+	@docker build -t $(APP):latest .
+	@kind load docker-image $(APP):latest
+	@kubectl apply -f kubernetes/manifests/.
+	@kubectl rollout restart deployment restapi-flask
+
+dev:
+	@make setup-dev
+	@make deploy-dev
