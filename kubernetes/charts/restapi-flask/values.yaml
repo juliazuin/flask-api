@@ -22,3 +22,6 @@ envVariables:
 envFrom:
   - secretRef:
       name: mongodb-credentials
+
+ingress:
+  enabled: true
