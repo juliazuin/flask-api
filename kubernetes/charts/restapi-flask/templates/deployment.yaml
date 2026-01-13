@@ -36,7 +36,7 @@ spec:
         {{- else }}
           httpGet: 
             path: /health
-            port: {{ .Values.appPort }}
+            port: {{ .Values.appPort | default 5000}}
         {{- end }}
         readinessProbe:
         {{- if .Values.readinessProbe }}
@@ -44,5 +44,5 @@ spec:
         {{- else }}
           httpGet:
             path: /health
-            port: {{ .Values.appPort }}
+            port: {{ .Values.appPort | default 5000}}
         {{- end }}
