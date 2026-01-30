@@ -157,6 +157,7 @@ Para conveniência, todos os comandos podem ser executados via Makefile:
 
 
 anotacoes gerais:
+
 toda vez que lancar as maquinas tem que copiar a chave privada para o local ~/.ssh/id_rsa da maquina bastion
 
 Depois vamos usar o Ansible Vault para gerenciar as credenciais de forma encriptada.
