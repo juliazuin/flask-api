@@ -22,7 +22,7 @@ jobs:
 
       - name: Install dependencies
         run: | 
-          pip install flake8 pytest mongomock
+          pip install flake8 pytest bandit mongomock
 
       - name: Run tests
         run: make test
