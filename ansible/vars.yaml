@@ -1,0 +1,22 @@
+---
+# MongoDB Installation for Amazon Linux 2023
+mongodb_version: "7.0"
+mongodb_bind_ip: "0.0.0.0"
+mongodb_port: 27017
+
+# MongoDB Security - Authentication
+mongodb_security_authorization: enabled
+mongodb_admin_user: admin
+mongodb_admin_pwd: oiN8A10VoS8pg1zD
+
+# MongoDB Users
+mongodb_users:
+  - db: users
+    user: restapi
+    pwd: vA@RepEX+Sp5
+    state: present
+    roles:
+      - readWrite
+
+# Disable replica set for standalone installation
+mongodb_replicaset: false
