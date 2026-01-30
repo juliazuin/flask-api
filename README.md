@@ -153,3 +153,20 @@ Para conveniência, todos os comandos podem ser executados via Makefile:
 | `make dev` | Executa setup-dev + deploy-dev (completo) |
 | `make teardown-dev` | Remove o cluster KIND |
 | `make test` | Executa testes, linting e análise de segurança |
+
+
+
+anotacoes gerais:
+toda vez que lancar as maquinas tem que copiar a chave privada para o local ~/.ssh/id_rsa da maquina bastion
+
+Depois vamos usar o Ansible Vault para gerenciar as credenciais de forma encriptada.
+
+$ ansible-vault create vars.yaml
+Você vai definir uma senha, que será usada para decriptar sempre que for visualizar ou editar o arquivo.
+
+
+$ ansible-playbook -i hosts.ini playbook.yml --ask-vault-password
+
+ansible-galaxy collection install community.mongodb
+
+> Não consegui fazer o ansible funcionar, tambem tentei instalar ele na mao via script sh mas não deu certo mesmo assim. Desisti
