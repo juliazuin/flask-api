@@ -5,16 +5,62 @@
 ### Pré-requisitos
 - Docker
 - Docker Compose
+- Kind (para desenvolvimento com Kubernetes local)
+- Helm (para gerenciar charts Kubernetes)
+- Kubectl (para interagir com clusters Kubernetes)
 
-### Levante os containers
+### Usando Docker Compose (Desenvolvimento Local)
+
+#### Levantar os containers
 ```bash
-docker-compose up -d
+make compose
 ```
 
-### Parar os containers
+### Usando Kubernetes com Kind (Desenvolvimento em Cluster)
+
+#### Setup completo (cria cluster + instala dependências + app)
 ```bash
-docker-compose down
+make dev
 ```
+
+Isso vai executar:
+1. `make setup-dev` - Cria cluster KIND, instala NGINX Ingress Controller e MongoDB via Helm
+2. `make deploy-dev` - Build imagem Docker, carrega no cluster e aplica manifestos da app.
+
+#### Apenas setup inicial (sem deploy)
+```bash
+make setup-dev
+```
+
+Cria o cluster KIND com:
+- NGINX Ingress Controller para roteamento
+- MongoDB via Helm chart
+
+#### Deploy da aplicação no cluster
+```bash
+make deploy-dev
+```
+
+Constrói e deploya a aplicação nos manifestos Kubernetes
+
+#### Remover cluster
+```bash
+make teardown-dev
+```
+
+#### Executar testes
+```bash
+make test
+```
+
+Pré-requisito:
+Iniciar a venv
+
+Executa:
+- Bandit (análise de segurança)
+- Black (formatação de código)
+- Flake8 (linting)
+- Pytest (testes unitários)
 
 ## API Endpoints
 
@@ -89,3 +135,38 @@ def test_create_user(self, app):
 ```
 
 Cada teste tem seu próprio banco de dados em memória isolado, garantindo que os testes não interferam uns com os outros.
+
+Run Bandit:
+```bash 
+bandit -r . -x './venv','./tests/'
+```
+
+### Usando Makefile
+
+Para conveniência, todos os comandos podem ser executados via Makefile:
+
+| Comando | Descrição |
+|---------|-----------|
+| `make compose` | Sobe os containers com Docker Compose |
+| `make setup-dev` | Configura cluster KIND com dependências |
+| `make deploy-dev` | Faz build e deploy da app no KIND |
+| `make dev` | Executa setup-dev + deploy-dev (completo) |
+| `make teardown-dev` | Remove o cluster KIND |
+| `make test` | Executa testes, linting e análise de segurança |
+
+
+
+anotacoes gerais:
+toda vez que lancar as maquinas tem que copiar a chave privada para o local ~/.ssh/id_rsa da maquina bastion
+
+Depois vamos usar o Ansible Vault para gerenciar as credenciais de forma encriptada.
+
+$ ansible-vault create vars.yaml
+Você vai definir uma senha, que será usada para decriptar sempre que for visualizar ou editar o arquivo.
+
+
+$ ansible-playbook -i hosts.ini playbook.yml --ask-vault-password
+
+ansible-galaxy collection install community.mongodb
+
+> Não consegui fazer o ansible funcionar, tambem tentei instalar ele na mao via script sh mas não deu certo mesmo assim. Desisti

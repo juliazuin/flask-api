@@ -1,0 +1,62 @@
+---
+- name: Configure MongoDB on Amazon Linux EC2
+  hosts: mongodb
+  become: yes
+  pre_tasks:
+    - name: Update yum cache
+      yum:
+        update_cache: yes
+    
+    - name: Install Python dependencies
+      yum:
+        name:
+          - python3-pip
+          - python3-devel
+        state: present
+    
+    - name: Install pymongo
+      pip:
+        name: pymongo
+        executable: pip3
+        extra_args: "--user"
+    
+    - name: Configure MongoDB repository
+      yum_repository:
+        name: mongodb-org-7.0
+        description: MongoDB Repository
+        baseurl: https://repo.mongodb.org/yum/amazon/2/mongodb-org/7.0/x86_64/
+        gpgcheck: yes
+        gpgkey: https://pgp.mongodb.com/server-7.0.asc
+        enabled: yes
+  
+  vars:
+    replica_set: false
+  
+  vars_files:
+    - vars.yaml
+  
+  roles:
+    # Install MongoDB from official repository
+    - community.mongodb.mongodb_install
+    
+    # Configure MongoDB daemon
+    - community.mongodb.mongodb_mongod
+    
+    # Setup authentication
+    - community.mongodb.mongodb_auth
+  
+  post_tasks:
+    - name: Ensure MongoDB is running
+      systemd:
+        name: mongod
+        state: started
+        enabled: yes
+    
+    - name: Check MongoDB connection
+      command: mongosh --eval "db.adminCommand('ping')"
+      register: mongo_ping
+      ignore_errors: yes
+    
+    - name: Display MongoDB status
+      debug:
+        msg: "MongoDB is running: {{ mongo_ping.rc == 0 }}"

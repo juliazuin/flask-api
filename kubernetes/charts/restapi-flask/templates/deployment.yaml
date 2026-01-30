@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels: {{ include "restapi-flask.labels" . | nindent 4 }}
+  name: {{ include "restapi-flask.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ include "restapi-flask.fullname" . }}
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: {{ include "restapi-flask.fullname" . }}
+    spec:
+      containers:
+      - image: {{ .Values.image.repository | default "restapi-flask" }}:{{ .Values.image.tag | default "latest" }}
+        name: api
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: {{ .Values.appPort }}  # The port your application listens on inside the container
+          name: http
+        {{- if .Values.envVariables }}
+        env:
+        {{- toYaml .Values.envVariables | nindent 8 }}
+        {{- end }}
+        {{- if .Values.envFrom }}
+        envFrom:
+        {{- toYaml .Values.envFrom | nindent 8 }}
+        {{- end }}
+        resources: {}
+        livenessProbe:
+        {{- if .Values.livenessProbe }}
+        {{- toYaml .Values.livenessProbe | nindent 10 }}
+        {{- else }}
+          httpGet: 
+            path: /health
+            port: {{ .Values.appPort | default 5000}}
+        {{- end }}
+        readinessProbe:
+        {{- if .Values.readinessProbe }}
+        {{- toYaml .Values.readinessProbe | nindent 10 }}
+        {{- else }}
+          httpGet:
+            path: /health
+            port: {{ .Values.appPort | default 5000}}
+        {{- end }}

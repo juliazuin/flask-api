@@ -1,0 +1,27 @@
+replicaCount: 10
+
+appPort: 5000
+
+# livenessProbe:
+#   httpGet: 
+#     path: /healthy
+#     port: 5000
+# readinessProbe:
+#   httpGet:
+#     path: /healthy
+#     port: 5000
+
+image:
+  repository: restapi-flask
+  tag: "1.0.0"
+
+envVariables:
+  - name: FLASK_ENV
+    value: development
+  
+envFrom:
+  - secretRef:
+      name: mongodb-credentials
+
+ingress:
+  enabled: true

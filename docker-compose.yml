@@ -19,7 +19,7 @@ services:
       - MONGO_USER=admin
       - MONGO_PASSWORD=admin
       - MONGO_HOST=mongodb
-      - MONGO_DB=usuarios
+      - MONGO_DB=users
     restart: always
     depends_on:
       - mongodb  

@@ -1,19 +1,18 @@
 import os
 
+MONGODB_USER = os.getenv("MONGODB_USER")
+MONGODB_PASSWORD = os.getenv("MONGODB_PASSWORD")
+MONGODB_HOST = os.getenv("MONGODB_HOST")
+MONGODB_DB = os.getenv("MONGODB_DB")
+MONGO_URI = f"mongodb://{MONGODB_USER}:{MONGODB_PASSWORD}@{MONGODB_HOST}/{MONGODB_DB}?authSource=admin"
+
 
 class LocalConfig:
-    mongo_user = os.getenv("MONGO_USER")
-    mongo_pass = os.getenv("MONGO_PASSWORD")
-    mongo_host = os.getenv("MONGO_HOST")
-    mongo_db = os.getenv("MONGO_DB")
-
-    MONGO_URI = f"mongodb://{mongo_user}:{mongo_pass}@{mongo_host}/{mongo_db}?authSource=admin"
+    MONGO_URI = MONGO_URI
 
 
 class ProdConfig:
-    MONGODB_SETTINGS = {
-        "MONGO_URI": "mongodb://admin:admin@mongodb/usuarios?authSource=admin"
-        }
+    MONGO_URI = MONGO_URI
 
 
 class TestConfig:
